@@ -11,6 +11,7 @@ import {
   Menu,
   X,
   UtensilsCrossed,
+  History,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -27,6 +28,7 @@ interface DashboardLayoutProps {
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/inventory', label: 'Inventory', icon: Package },
+  { href: '/briefings', label: 'Briefings', icon: History },
   { href: '/chatbot', label: 'AI Assistant', icon: MessageSquare },
 ]
 

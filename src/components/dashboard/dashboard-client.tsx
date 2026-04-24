@@ -20,6 +20,7 @@ import {
 } from 'recharts'
 import { CostAlertPanel } from './cost-alert-panel'
 import { AiInsightCard } from './ai-insight-card'
+import { DailyBriefingModal } from './daily-briefing-modal'
 import { Topbar } from '@/components/layout/topbar'
 import { useDashboardContext } from '@/context/dashboard-context'
 import type { SalesSummary, InventorySummaryData, ExpenseSummaryData } from '@/lib/data/dashboard'
@@ -91,6 +92,7 @@ export function DashboardClient({
 
   return (
     <div className="flex flex-col min-h-screen pb-10" key={refreshKey}>
+      <DailyBriefingModal businessId={business.id} businessName={business.name} />
       <Topbar title="Dashboard Overview" hasAlerts={inventorySummary.criticalItems.length > 0} />
       
       <div className="flex-1 space-y-6">

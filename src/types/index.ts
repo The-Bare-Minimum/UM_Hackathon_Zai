@@ -71,6 +71,23 @@ export interface AiBriefing {
   created_at: string
 }
 
+export interface BriefingContent {
+  greeting: string
+  insights: string[]
+  urgent: string | null
+  closing: string | null
+  raw: string
+}
+
+export interface DailyBriefing {
+  id: string
+  business_id: string
+  content: BriefingContent
+  briefing_date: string
+  cached: boolean
+  generated_at: string
+}
+
 export interface ChatMessage {
   id: string
   role: 'user' | 'assistant'

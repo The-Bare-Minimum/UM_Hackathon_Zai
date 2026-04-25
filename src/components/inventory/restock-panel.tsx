@@ -114,7 +114,7 @@ export function RestockPanel({ businessId }: RestockPanelProps) {
         {loading ? (
           <div className="flex items-center justify-center py-8 text-muted-foreground">
             <Loader2 className="w-6 h-6 animate-spin mr-2" />
-            <span className="text-sm">Z.AI is analyzing your inventory...</span>
+            <span className="text-sm">Zara is analyzing your inventory...</span>
           </div>
         ) : recommendations.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center space-y-3">

@@ -20,6 +20,7 @@ import {
 } from 'recharts'
 import { CostAlertPanel } from './cost-alert-panel'
 import { AiInsightCard } from './ai-insight-card'
+import { FinanceHealthCard } from './finance-health-card'
 import { useDashboardContext } from '@/context/dashboard-context'
 import { Upload, BellRing, FileText } from 'lucide-react'
 import type { SalesSummary, InventorySummaryData, ExpenseSummaryData } from '@/lib/data/dashboard'
@@ -299,6 +300,11 @@ export function DashboardClient({
             </div>
           </div>
         )}
+
+        {/* Charts Section */}
+
+        {/* Finance Health */}
+        {hasData && <FinanceHealthCard businessId={business.id} currency="MYR" />}
 
         {/* Charts Section */}
         <div className="grid gap-6 lg:grid-cols-3">

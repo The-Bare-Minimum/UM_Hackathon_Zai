@@ -14,9 +14,16 @@ import {
   History,
   ArrowRight,
   Settings2,
+  LineChart,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { createClient } from '@/lib/supabase/client'
 import type { Business } from '@/types'
 import { BUSINESS_TYPES } from '@/lib/constants'
@@ -33,6 +40,7 @@ interface DashboardLayoutProps {
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/inventory', label: 'Inventory', icon: Package },
+  { href: '/finance', label: 'Finance', icon: LineChart, subtitle: 'P&L & forecasts' },
   { href: '/briefings', label: 'Briefings', icon: History },
   { href: '/chatbot', label: 'AI Assistant', icon: MessageSquare, subtitle: 'Ask Zara' },
   { href: '/customization', label: 'Customization', icon: Settings2, subtitle: 'Rules & preferences' },
@@ -66,9 +74,10 @@ export function DashboardLayoutClient({ children, business, criticalItemsCount =
   }
 
   return (
-    <div className="min-h-screen bg-secondary">
-      {/* Daily Briefing Modal - Shows on login */}
-      <DailyBriefingModal businessId={business.id} businessName={business.name} />
+    <TooltipProvider>
+      <div className="min-h-screen bg-secondary">
+        {/* Daily Briefing Modal - Shows on login */}
+        <DailyBriefingModal businessId={business.id} businessName={business.name} />
       
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 md:w-60 bg-background border-r z-40">
@@ -118,7 +127,15 @@ export function DashboardLayoutClient({ children, business, criticalItemsCount =
                   </span>
                 )}
                 {item.href === '/customization' && !rulesConfigured && (
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" title="Configure your business rules" />
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="max-w-xs">
+                      <p className="font-semibold text-xs mb-1">Action Required</p>
+                      <p className="text-xs">Configure your business rules to get personalized AI recommendations tailored to your targets and constraints.</p>
+                    </TooltipContent>
+                  </Tooltip>
                 )}
               </Link>
             )
@@ -253,7 +270,15 @@ export function DashboardLayoutClient({ children, business, criticalItemsCount =
                       </span>
                     )}
                     {item.href === '/customization' && !rulesConfigured && (
-                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" title="Configure your business rules" />
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent side="right" className="max-w-xs">
+                          <p className="font-semibold text-xs mb-1">Action Required</p>
+                          <p className="text-xs">Configure your business rules to get personalized AI recommendations tailored to your targets and constraints.</p>
+                        </TooltipContent>
+                      </Tooltip>
                     )}
                   </Link>
                 )
@@ -281,12 +306,13 @@ export function DashboardLayoutClient({ children, business, criticalItemsCount =
         </>
       )}
 
-      {/* Main content */}
-      <main className="md:ml-60">
-        <div className="p-4 md:p-6">
-          {children}
-        </div>
-      </main>
-    </div>
+        {/* Main content */}
+        <main className="md:ml-60">
+          <div className="p-4 md:p-6">
+            {children}
+          </div>
+        </main>
+      </div>
+    </TooltipProvider>
   )
 }

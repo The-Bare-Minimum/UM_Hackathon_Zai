@@ -367,7 +367,7 @@ export function SnapInvoiceModal({
             <div>
               <h2 className="text-2xl font-bold">Review Extracted Items</h2>
               <p className="text-muted-foreground">
-                Z.AI found {extractedItems.length} items &middot; Total: RM {invoiceTotal.toFixed(2)}
+                Zara found {extractedItems.length} items &middot; Total: RM {invoiceTotal.toFixed(2)}
               </p>
             </div>
 

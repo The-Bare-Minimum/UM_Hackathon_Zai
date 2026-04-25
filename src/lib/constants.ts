@@ -34,6 +34,11 @@ export const EXPENSE_CATEGORIES = [
   'Equipment',
   'Marketing',
   'Maintenance',
+  'Subscriptions',
+  'Packaging',
+  'Transportation',
+  'Insurance',
+  'Licenses & Permits',
   'Other',
 ] as const
 
@@ -144,3 +149,28 @@ export const DEFAULT_RULES: Partial<BusinessRules> = {
   ai_tone: 'balanced',
   alert_sensitivity: 'medium',
 }
+
+// ─── Finance Constants (Phase 5.6) ──────────────────────
+
+export const PAYMENT_METHODS = [
+  { value: 'cash', label: 'Cash' },
+  { value: 'bank_transfer', label: 'Bank Transfer' },
+  { value: 'card', label: 'Card' },
+  { value: 'ewallet', label: 'E-Wallet (GrabPay/TnG)' },
+  { value: 'other', label: 'Other' },
+] as const
+
+export const RECURRING_EXPENSES_EXAMPLES = [
+  'Monthly rent',
+  'Staff salaries',
+  'Utility bills',
+  'Software subscriptions',
+  'Insurance premiums',
+  'Equipment leasing',
+] as const
+
+export const ANOMALY_THRESHOLD_PCT = 25
+
+export const BURN_RATE_WARNING_DAYS = 30
+
+export const FORECAST_DAYS = 30

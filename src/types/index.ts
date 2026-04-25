@@ -43,15 +43,7 @@ export interface SalesRecord {
   created_at: string
 }
 
-export interface Expense {
-  id: string
-  business_id: string
-  description: string
-  category: string
-  amount: number
-  expense_date: string
-  created_at: string
-}
+// Expense interface moved to Finance Types section below
 
 export interface StaffMember {
   id: string
@@ -264,5 +256,136 @@ export interface RuleViolation {
   limit: string
   severity: 'warning' | 'danger'
   suggestion: string
+}
+
+// ─── Finance Types (Phase 5.6) ──────────────────────────
+
+export type RecurrencePeriod = 'weekly' | 'monthly' | 'yearly'
+
+export type AnomalyType =
+  | 'expense_spike'
+  | 'revenue_drop'
+  | 'new_expense_category'
+  | 'recurring_missed'
+  | 'budget_exceeded'
+  | 'unusual_pattern'
+  | 'profit_margin_drop'
+
+export type AnomalySeverity = 'info' | 'warning' | 'danger'
+
+export type PaymentMethod = 'cash' | 'bank_transfer' | 'card' | 'ewallet' | 'other'
+
+export interface Expense {
+  id: string
+  business_id: string
+  description: string
+  category: string
+  amount: number
+  expense_date: string
+  is_recurring: boolean
+  recurrence_period: RecurrencePeriod | null
+  subscription_name: string | null
+  vendor: string | null
+  notes: string | null
+  payment_method: PaymentMethod | null
+  receipt_url: string | null
+  created_at: string
+}
+
+export interface FinanceAnomaly {
+  id: string
+  business_id: string
+  anomaly_type: AnomalyType
+  title: string
+  description: string
+  affected_category: string | null
+  current_value: number | null
+  baseline_value: number | null
+  deviation_pct: number | null
+  severity: AnomalySeverity
+  detected_at: string
+  is_dismissed: boolean
+  dismissed_at: string | null
+}
+
+export interface ProfitLossSummary {
+  period: string
+  totalRevenue: number
+  totalExpenses: number
+  grossProfit: number
+  profitMarginPct: number
+  totalTransactions: number
+  revenueByDay: Array<{
+    date: string
+    revenue: number
+    expenses: number
+    profit: number
+  }>
+  expensesByCategory: Array<{
+    category: string
+    amount: number
+    pct: number
+    isRecurring: boolean
+  }>
+  recurringExpenses: Expense[]
+  oneTimeExpenses: Expense[]
+  salaryTotal: number
+  ingredientTotal: number
+  otherExpensesTotal: number
+}
+
+export interface BurnRateData {
+  dailyBurnRate: number
+  weeklyBurnRate: number
+  monthlyBurnRate: number
+  dailyRevenue: number
+  netDailyBurn: number
+  runwayDays: number | null
+  isProfilePositive: boolean
+  trend: 'improving' | 'stable' | 'worsening'
+  trendPct: number
+  last30Days: Array<{
+    date: string
+    expenses: number
+    revenue: number
+    net: number
+  }>
+}
+
+export interface ForecastScenario {
+  label: 'optimistic' | 'likely' | 'pessimistic'
+  projectedRevenue: number
+  projectedExpenses: number
+  projectedProfit: number
+  projectedMarginPct: number
+  assumptions: string[]
+  actions: string[]
+}
+
+export interface ProfitForecast {
+  forecastPeriod: string
+  scenarios: ForecastScenario[]
+  recommendation: string
+  onTrackForTarget: boolean | null
+  targetRevenue: number | null
+  generatedAt: string
+}
+
+export interface FinanceSnapshot {
+  id: string
+  business_id: string
+  snapshot_date: string
+  daily_revenue: number
+  daily_expenses: number
+  daily_profit: number
+  cumulative_month_revenue: number
+  cumulative_month_expenses: number
+}
+
+export interface RecurringExpenses {
+  monthly: Expense[]
+  weekly: Expense[]
+  yearly: Expense[]
+  totalMonthlyCommitment: number
 }
 

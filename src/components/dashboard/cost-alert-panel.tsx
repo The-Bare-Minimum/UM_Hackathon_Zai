@@ -76,7 +76,7 @@ export function CostAlertPanel({ businessId }: CostAlertPanelProps) {
   return (
     <Card className="shadow-sm">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-base font-semibold">Z.AI Cost & Waste Alerts</CardTitle>
+        <CardTitle className="text-base font-semibold">Zara Cost & Waste Alerts</CardTitle>
         <Button
           variant="ghost"
           size="icon"

@@ -125,18 +125,32 @@ export async function POST() {
 
     // ─── EXPENSES ────────────────────────────────────────
     const expenseRecords = [
-      { description: 'Monthly Rent - April', category: 'Rent', amount: 3500, expense_date: daysAgo(14) },
-      { description: 'Staff Salary - Week 2', category: 'Staff Salary', amount: 4200, expense_date: daysAgo(7) },
-      { description: 'Chicken & Meat Restock', category: 'Ingredients', amount: 480, expense_date: daysAgo(12) },
-      { description: 'Vegetables & Fresh Produce', category: 'Ingredients', amount: 320, expense_date: daysAgo(9) },
-      { description: 'Dry Goods Restock', category: 'Ingredients', amount: 250, expense_date: daysAgo(5) },
-      { description: 'Drinks Supplies Restock', category: 'Ingredients', amount: 580, expense_date: daysAgo(3) },
-      { description: 'Electricity & Water Bill', category: 'Utilities', amount: 280, expense_date: daysAgo(10) },
+      { description: 'Monthly Rent - April', category: 'Rent', amount: 3500, expense_date: daysAgo(14), is_recurring: true, recurrence_period: 'monthly', vendor: 'Landlord Sdn Bhd', payment_method: 'bank_transfer' },
+      { description: 'Staff Salary - Week 2', category: 'Staff Salary', amount: 4200, expense_date: daysAgo(7), is_recurring: true, recurrence_period: 'monthly', payment_method: 'bank_transfer' },
+      { description: 'Chicken & Meat Restock', category: 'Ingredients', amount: 480, expense_date: daysAgo(12), vendor: 'Pasar Borong KL', payment_method: 'cash' },
+      { description: 'Vegetables & Fresh Produce', category: 'Ingredients', amount: 320, expense_date: daysAgo(9), vendor: 'Pasar Borong KL', payment_method: 'cash' },
+      { description: 'Dry Goods Restock', category: 'Ingredients', amount: 250, expense_date: daysAgo(5), vendor: 'MyGrocer Wholesale', payment_method: 'ewallet' },
+      { description: 'Drinks Supplies Restock', category: 'Ingredients', amount: 580, expense_date: daysAgo(3), vendor: 'Milo Distributor', payment_method: 'bank_transfer' },
+      { description: 'Electricity & Water Bill', category: 'Utilities', amount: 280, expense_date: daysAgo(10), is_recurring: true, recurrence_period: 'monthly', payment_method: 'bank_transfer' },
+      { description: 'POS Software Subscription', category: 'Subscriptions', amount: 89, expense_date: daysAgo(14), is_recurring: true, recurrence_period: 'monthly', subscription_name: 'StoreHub POS', payment_method: 'card' },
+      { description: 'Emergency Equipment Repair', category: 'Equipment', amount: 1850, expense_date: daysAgo(2), vendor: 'KL Equipment Services', payment_method: 'cash', notes: 'Walk-in freezer compressor replacement' },
+      { description: 'Grab/Panda commission fees', category: 'Marketing', amount: 420, expense_date: daysAgo(6), is_recurring: true, recurrence_period: 'monthly', payment_method: 'bank_transfer' },
+      { description: 'Cooking Oil Bulk Purchase', category: 'Ingredients', amount: 195, expense_date: daysAgo(8), vendor: 'MyGrocer Wholesale', payment_method: 'cash' },
+      { description: 'Internet & WiFi', category: 'Utilities', amount: 129, expense_date: daysAgo(13), is_recurring: true, recurrence_period: 'monthly', subscription_name: 'TM Unifi', payment_method: 'card' },
     ]
 
     const { error: expError } = await supabase
       .from('expenses')
-      .insert(expenseRecords.map((e) => ({ ...e, business_id: bid })))
+      .insert(expenseRecords.map((e) => ({
+        ...e,
+        business_id: bid,
+        is_recurring: e.is_recurring || false,
+        recurrence_period: e.recurrence_period || null,
+        subscription_name: (e as any).subscription_name || null,
+        vendor: e.vendor || null,
+        notes: (e as any).notes || null,
+        payment_method: e.payment_method || null,
+      })))
 
     if (expError) throw expError
 

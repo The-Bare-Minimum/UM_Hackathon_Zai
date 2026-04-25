@@ -66,7 +66,7 @@ export function AiInsightCard({ section, businessId, title }: AiInsightCardProps
         <div className={`flex items-center gap-1.5 ${iconColor}`}>
           <Sparkles className="w-3.5 h-3.5" />
           <span className="text-xs font-semibold tracking-wide uppercase">
-            {title || 'Z.AI Insight'}
+            {title || 'Zara Insight'}
           </span>
         </div>
         <button

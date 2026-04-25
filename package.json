@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@google/genai": "^1.50.1",
+    "@radix-ui/react-tooltip": "^1.2.8",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.104.1",
     "class-variance-authority": "^0.7.1",

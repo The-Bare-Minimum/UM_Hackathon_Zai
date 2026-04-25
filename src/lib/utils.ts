@@ -22,7 +22,8 @@ export function getTimeGreeting(): string {
   const hour = getMalaysiaTime().getHours()
   if (hour < 12) return 'morning'
   if (hour < 17) return 'afternoon'
-  return 'evening'
+  if (hour < 21) return 'evening'
+  return 'night'
 }
 
 export function formatBriefingDate(): string {

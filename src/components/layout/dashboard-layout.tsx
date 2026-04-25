@@ -20,6 +20,7 @@ import { createClient } from '@/lib/supabase/client'
 import type { Business } from '@/types'
 import { BUSINESS_TYPES } from '@/lib/constants'
 import { useDashboardContext } from '@/context/dashboard-context'
+import { DailyBriefingModal } from '@/components/dashboard/daily-briefing-modal'
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -63,6 +64,9 @@ export function DashboardLayoutClient({ children, business, criticalItemsCount =
 
   return (
     <div className="min-h-screen bg-secondary">
+      {/* Daily Briefing Modal - Shows on login */}
+      <DailyBriefingModal businessId={business.id} businessName={business.name} />
+      
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 md:w-60 bg-background border-r z-40">
         {/* Logo */}

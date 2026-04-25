@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { Eye, EyeOff, UtensilsCrossed } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -75,12 +75,7 @@ export default function LoginPage() {
   return (
     <Card className="w-full max-w-md shadow-sm">
       <CardHeader className="text-center space-y-2 pb-4">
-        <div className="flex items-center justify-center gap-2 mb-1">
-          <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary text-primary-foreground">
-            <UtensilsCrossed className="w-4 h-4" />
-          </div>
-          <span className="text-xl font-bold tracking-tight">FnB.ai</span>
-        </div>
+        <h1 className="text-xl font-bold tracking-tight">Welcome back</h1>
         <p className="text-sm text-muted-foreground">
           Sign in to your account
         </p>

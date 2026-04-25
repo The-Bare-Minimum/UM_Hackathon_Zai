@@ -4,6 +4,7 @@ import { DashboardLayoutClient } from '@/components/layout/dashboard-layout'
 import { DashboardProvider } from '@/context/dashboard-context'
 import { CsvImportModal } from '@/components/dashboard/csv-import-modal'
 import type { Business } from '@/types'
+import { getCriticalItemCount } from '@/lib/data/inventory'
 
 export default async function DashboardLayout({
   children,
@@ -30,9 +31,14 @@ export default async function DashboardLayout({
     redirect('/onboarding')
   }
 
+  const criticalItemsCount = await getCriticalItemCount(business.id)
+
   return (
     <DashboardProvider>
-      <DashboardLayoutClient business={business as Business}>
+      <DashboardLayoutClient 
+        business={business as Business}
+        criticalItemsCount={criticalItemsCount}
+      >
         {children}
         <CsvImportModal businessId={business.id} />
       </DashboardLayoutClient>

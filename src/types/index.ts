@@ -95,6 +95,57 @@ export interface ChatMessage {
   timestamp: string
 }
 
+export interface InventoryLog {
+  id: string
+  inventory_item_id: string
+  business_id: string
+  item_name: string
+  change_type: 'add' | 'deduct' | 'adjust' | 'invoice'
+  quantity_change: number
+  notes: string | null
+  created_at: string
+}
+
+export interface InventoryStats {
+  totalItems: number
+  totalValue: number
+  criticalCount: number
+  lowCount: number
+  okCount: number
+  expiringThisWeek: InventoryItem[]
+}
+
+export interface ExtractedInvoiceItem {
+  name: string
+  name_original: string
+  quantity: number
+  unit: string
+  unit_price: number
+  total_price: number
+  category: string
+  matchedItemId: string | null
+  matchedItemName: string | null
+}
+
+export interface ScanInvoiceResponse {
+  items: ExtractedInvoiceItem[]
+  totalItems: number
+  totalValue: number
+  storagePath: string
+  invoiceDate: string
+}
+
+export interface RestockRecommendation {
+  item_name: string
+  current_quantity: number
+  current_unit: string
+  recommended_order_quantity: number
+  reason: string
+  estimated_cost: number
+  urgency: 'immediate' | 'this_week' | 'next_week'
+  supplier_tip?: string
+}
+
 export interface ApiResponse<T> {
   data: T | null
   error: string | null

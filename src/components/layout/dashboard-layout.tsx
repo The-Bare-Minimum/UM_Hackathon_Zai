@@ -23,6 +23,7 @@ import { BUSINESS_TYPES } from '@/lib/constants'
 interface DashboardLayoutProps {
   children: React.ReactNode
   business: Business
+  criticalItemsCount?: number
 }
 
 const NAV_ITEMS = [
@@ -32,7 +33,7 @@ const NAV_ITEMS = [
   { href: '/chatbot', label: 'AI Assistant', icon: MessageSquare },
 ]
 
-export function DashboardLayoutClient({ children, business }: DashboardLayoutProps) {
+export function DashboardLayoutClient({ children, business, criticalItemsCount = 0 }: DashboardLayoutProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -72,14 +73,21 @@ export function DashboardLayoutClient({ children, business }: DashboardLayoutPro
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                   active
                     ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 }`}
               >
-                <Icon className="w-4 h-4" />
-                {item.label}
+                <div className="flex items-center gap-3">
+                  <Icon className="w-4 h-4" />
+                  {item.label}
+                </div>
+                {item.href === '/inventory' && criticalItemsCount > 0 && (
+                  <Badge variant="destructive" className="h-5 px-1.5 text-[10px]">
+                    {criticalItemsCount}
+                  </Badge>
+                )}
               </Link>
             )
           })}
@@ -162,14 +170,21 @@ export function DashboardLayoutClient({ children, business }: DashboardLayoutPro
                     key={item.href}
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                    className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                       active
                         ? 'bg-primary text-primary-foreground'
                         : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                     }`}
                   >
-                    <Icon className="w-4 h-4" />
-                    {item.label}
+                    <div className="flex items-center gap-3">
+                      <Icon className="w-4 h-4" />
+                      {item.label}
+                    </div>
+                    {item.href === '/inventory' && criticalItemsCount > 0 && (
+                      <Badge variant="destructive" className="h-5 px-1.5 text-[10px]">
+                        {criticalItemsCount}
+                      </Badge>
+                    )}
                   </Link>
                 )
               })}

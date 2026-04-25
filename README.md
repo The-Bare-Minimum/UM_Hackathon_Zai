@@ -1,3 +1,6 @@
+# Pitch Video *HERE*
+https://drive.google.com/file/d/1OYnoCQ6CR0ZLUrZMBhTwQseHSODa9Lkq/view?usp=sharing
+
 # FnB.ai 🍽️
 
 > AI-powered business management platform for F&B SMEs in Malaysia

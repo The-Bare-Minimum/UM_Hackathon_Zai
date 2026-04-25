@@ -4,7 +4,7 @@
 
 ## 🚀 Revolutionizing Restaurant Management with Edge AI
 
-FnB.ai is a production-grade management platform designed specifically for the Malaysian F&B ecosystem. It empowers restaurant owners with real-time financial monitoring, intelligent inventory management, and data-driven business insights powered by **Z.AI (Google Gemini)**.
+FnB.ai is a production-grade management platform designed specifically for the Malaysian F&B ecosystem. It empowers restaurant owners with real-time financial monitoring, intelligent inventory management, and data-driven business insights powered by **Google Gemini**.
 
 ---
 
@@ -36,7 +36,7 @@ FnB.ai is a production-grade management platform designed specifically for the M
 - **Frontend**: Next.js 16 (App Router), Tailwind CSS, shadcn/ui
 - **Backend**: Next.js Server Actions & API Routes
 - **Database**: Supabase (PostgreSQL)
-- **AI Engine**: Google Gemini 1.5 Flash & 2.0 Flash
+- **AI Engine**: Google Gemma 4 26B
 - **Image Processing**: Sharp (Edge Compression)
 - **State Management**: Zustand & React Context
 

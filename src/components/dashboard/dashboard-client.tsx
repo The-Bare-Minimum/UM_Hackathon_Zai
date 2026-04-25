@@ -74,7 +74,7 @@ export function DashboardClient({
     ? ((salesSummary.todayRevenue - salesSummary.yesterdayRevenue) / salesSummary.yesterdayRevenue) * 100
     : 0
 
-  const COLORS = ['#8b5cf6', '#a78bfa', '#c4b5fd', '#ddd6fe', '#ede9fe', '#f5f3ff', '#6d28d9', '#5b21b6']
+  const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316']
 
   const greeting = () => {
     const hour = new Date().getHours()
@@ -126,7 +126,9 @@ export function DashboardClient({
           <Card className="shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <span className="text-sm font-medium text-muted-foreground">Today's Revenue</span>
-              <DollarSign className="w-4 h-4 text-muted-foreground" />
+              <div className="rounded-full bg-emerald-100 p-2">
+                <DollarSign className="w-4 h-4 text-emerald-600" />
+              </div>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">RM{salesSummary.todayRevenue.toFixed(2)}</div>
@@ -150,7 +152,9 @@ export function DashboardClient({
           <Card className="shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <span className="text-sm font-medium text-muted-foreground">This Week's Revenue</span>
-              <Activity className="w-4 h-4 text-muted-foreground" />
+              <div className="rounded-full bg-orange-100 p-2">
+                <Activity className="w-4 h-4 text-orange-600" />
+              </div>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">RM{salesSummary.weekRevenue.toFixed(2)}</div>
@@ -174,7 +178,9 @@ export function DashboardClient({
           <Card className="shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <span className="text-sm font-medium text-muted-foreground">Inventory Alerts</span>
-              <Package className="w-4 h-4 text-muted-foreground" />
+              <div className="rounded-full bg-red-100 p-2">
+                <Package className="w-4 h-4 text-red-600" />
+              </div>
             </CardHeader>
             <CardContent>
               <div className={`text-2xl font-bold ${inventorySummary.criticalItems.length > 0 ? 'text-destructive' : ''}`}>
@@ -195,7 +201,9 @@ export function DashboardClient({
           <Card className="shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
               <span className="text-sm font-medium text-muted-foreground">This Week's Expenses</span>
-              <Users className="w-4 h-4 text-muted-foreground" />
+              <div className="rounded-full bg-blue-100 p-2">
+                <Users className="w-4 h-4 text-blue-600" />
+              </div>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">RM{expenseSummary.weekExpenses.toFixed(2)}</div>
@@ -224,6 +232,12 @@ export function DashboardClient({
               <div className="h-[280px] w-full mt-4">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={salesSummary.revenueByDay} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="purpleGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#a855f7" stopOpacity={1} />
+                        <stop offset="100%" stopColor="#7c3aed" stopOpacity={1} />
+                      </linearGradient>
+                    </defs>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
                     <XAxis 
                       dataKey="date" 
@@ -257,7 +271,7 @@ export function DashboardClient({
                         return null
                       }}
                     />
-                    <Bar dataKey="revenue" fill="#8b5cf6" radius={[4, 4, 0, 0]} maxBarSize={50} />
+                    <Bar dataKey="revenue" fill="url(#purpleGradient)" radius={[4, 4, 0, 0]} maxBarSize={50} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -287,7 +301,7 @@ export function DashboardClient({
                         </div>
                         <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
                           <div 
-                            className="h-full bg-primary/80 rounded-full" 
+                            className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" 
                             style={{ width: `${widthPercent}%` }}
                           />
                         </div>

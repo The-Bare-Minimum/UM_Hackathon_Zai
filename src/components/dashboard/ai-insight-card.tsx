@@ -41,10 +41,29 @@ export function AiInsightCard({ section, businessId, title }: AiInsightCardProps
     fetchInsight()
   }, [businessId, section])
 
+  const accentColor = section === 'expenses' 
+    ? 'before:bg-green-700' 
+    : section === 'inventory' 
+    ? 'before:bg-red-600' 
+    : section === 'overview'
+    ? 'before:bg-blue-600'
+    : section === 'revenue'
+    ? 'before:bg-purple-500'
+    : 'before:bg-primary'
+  const iconColor = section === 'expenses' 
+    ? 'text-green-700' 
+    : section === 'inventory' 
+    ? 'text-red-600' 
+    : section === 'overview'
+    ? 'text-blue-600'
+    : section === 'revenue'
+    ? 'text-purple-500'
+    : 'text-primary'
+
   return (
-    <div className="relative overflow-hidden rounded-md border border-border bg-secondary/30 px-4 py-3 before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:bg-primary">
+    <div className={`relative overflow-hidden rounded-md border border-border bg-secondary/30 px-4 py-3 before:absolute before:left-0 before:top-0 before:h-full before:w-1 ${accentColor}`}>
       <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-1.5 text-primary">
+        <div className={`flex items-center gap-1.5 ${iconColor}`}>
           <Sparkles className="w-3.5 h-3.5" />
           <span className="text-xs font-semibold tracking-wide uppercase">
             {title || 'Z.AI Insight'}
@@ -53,7 +72,17 @@ export function AiInsightCard({ section, businessId, title }: AiInsightCardProps
         <button
           onClick={fetchInsight}
           disabled={loading}
-          className="text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
+          className={`transition-colors disabled:opacity-50 ${
+            section === 'expenses' 
+              ? 'text-green-700/60 hover:text-green-700' 
+              : section === 'inventory'
+              ? 'text-red-600/60 hover:text-red-600'
+              : section === 'overview'
+              ? 'text-blue-600/60 hover:text-blue-600'
+              : section === 'revenue'
+              ? 'text-purple-500/60 hover:text-purple-500'
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
           aria-label="Refresh insight"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />

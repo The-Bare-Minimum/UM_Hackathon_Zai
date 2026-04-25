@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { PlusCircle, Camera, Search, LayoutDashboard } from 'lucide-react'
+import Link from 'next/link'
+import { PlusCircle, Camera, Search, LayoutDashboard, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -341,7 +342,18 @@ export function InventoryClient({
 
         {/* Sidebar: Activity Log */}
         <div className="xl:col-span-1 border rounded-xl bg-card p-4 h-fit sticky top-6">
-          <h3 className="font-semibold text-lg mb-4">Recent Activity</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-semibold text-lg">Recent Activity</h3>
+            {logs.length > 0 && (
+              <Link 
+                href="/inventory/activity-history"
+                className="text-sm text-primary hover:underline flex items-center gap-1"
+              >
+                View All
+                <ArrowRight className="w-3 h-3" />
+              </Link>
+            )}
+          </div>
           
           {logs.length === 0 ? (
             <p className="text-sm text-muted-foreground">No recent stock changes.</p>

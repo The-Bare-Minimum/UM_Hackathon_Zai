@@ -11,6 +11,8 @@ interface DashboardContextValue {
   setIsBriefingOpen: (open: boolean) => void
   hasSeenBriefingToday: boolean
   setHasSeenBriefingToday: (seen: boolean) => void
+  unreadChatCount: number
+  setUnreadChatCount: (count: number) => void
 }
 
 const DashboardContext = createContext<DashboardContextValue>({
@@ -22,6 +24,8 @@ const DashboardContext = createContext<DashboardContextValue>({
   setIsBriefingOpen: () => {},
   hasSeenBriefingToday: false,
   setHasSeenBriefingToday: () => {},
+  unreadChatCount: 0,
+  setUnreadChatCount: () => {},
 })
 
 export function DashboardProvider({ children }: { children: ReactNode }) {
@@ -29,6 +33,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [refreshKey, setRefreshKey] = useState(0)
   const [isBriefingOpen, setIsBriefingOpen] = useState(false)
   const [hasSeenBriefingToday, setHasSeenBriefingToday] = useState(false)
+  const [unreadChatCount, setUnreadChatCount] = useState(0)
 
   const refreshDashboard = useCallback(() => {
     setRefreshKey((prev) => prev + 1)
@@ -45,6 +50,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         setIsBriefingOpen,
         hasSeenBriefingToday,
         setHasSeenBriefingToday,
+        unreadChatCount,
+        setUnreadChatCount,
       }}
     >
       {children}

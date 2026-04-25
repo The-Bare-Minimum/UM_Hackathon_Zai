@@ -90,9 +90,16 @@ export interface DailyBriefing {
 
 export interface ChatMessage {
   id: string
+  business_id: string
   role: 'user' | 'assistant'
   content: string
-  timestamp: string
+  created_at: string
+}
+
+export interface ChatSession {
+  messages: ChatMessage[]
+  isLoading: boolean
+  error: string | null
 }
 
 export interface InventoryLog {
@@ -150,3 +157,33 @@ export interface ApiResponse<T> {
   data: T | null
   error: string | null
 }
+
+// Activity History Types
+export interface ActivityFilters {
+  changeType: 'all' | 'add' | 'deduct' | 'adjust' | 'invoice'
+  dateRange: 'all' | 'today' | 'week' | 'month' | 'custom'
+  customStartDate?: string
+  customEndDate?: string
+  itemName: string
+}
+
+export type SortOption = 'newest' | 'oldest'
+
+export interface PaginatedLogsResponse {
+  logs: InventoryLog[]
+  totalCount: number
+  totalPages: number
+  currentPage: number
+}
+
+export interface LogsQueryParams {
+  page: number
+  limit: number
+  changeType?: 'all' | 'add' | 'deduct' | 'adjust' | 'invoice'
+  dateRange?: 'all' | 'today' | 'week' | 'month' | 'custom'
+  customStartDate?: string
+  customEndDate?: string
+  itemName?: string
+  sortBy?: SortOption
+}
+

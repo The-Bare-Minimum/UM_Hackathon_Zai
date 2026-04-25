@@ -155,3 +155,138 @@ export async function getCriticalItemCount(
     (i: any) => Number(i.quantity) <= 0 || Number(i.quantity) <= Number(i.reorder_level)
   ).length
 }
+
+// ─── Get Inventory Logs Paginated ───────────────────────
+export interface GetInventoryLogsPaginatedParams {
+  page: number
+  limit: number
+  changeType?: 'all' | 'add' | 'deduct' | 'adjust' | 'invoice'
+  dateRange?: 'all' | 'today' | 'week' | 'month' | 'custom'
+  customStartDate?: string
+  customEndDate?: string
+  itemName?: string
+  sortBy?: 'newest' | 'oldest'
+}
+
+export interface PaginatedLogsResponse {
+  logs: InventoryLog[]
+  totalCount: number
+  totalPages: number
+  currentPage: number
+}
+
+export async function getInventoryLogsPaginated(
+  businessId: string,
+  params: GetInventoryLogsPaginatedParams
+): Promise<PaginatedLogsResponse> {
+  const supabase = await createClient()
+  
+  const {
+    page = 1,
+    limit = 50,
+    changeType = 'all',
+    dateRange = 'all',
+    customStartDate,
+    customEndDate,
+    itemName = '',
+    sortBy = 'newest'
+  } = params
+
+  // Calculate offset for pagination
+  const offset = (page - 1) * limit
+
+  // Build base query with count
+  let query = supabase
+    .from('inventory_logs')
+    .select(`
+      id,
+      inventory_item_id,
+      business_id,
+      change_type,
+      quantity_change,
+      notes,
+      created_at,
+      inventory_items!inner(name)
+    `, { count: 'exact' })
+    .eq('business_id', businessId)
+
+  // Apply change_type filter (skip if 'all')
+  if (changeType !== 'all') {
+    query = query.eq('change_type', changeType)
+  }
+
+  // Apply date range filters
+  if (dateRange === 'today') {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    query = query.gte('created_at', today.toISOString())
+  } else if (dateRange === 'week') {
+    const weekAgo = new Date()
+    weekAgo.setDate(weekAgo.getDate() - 7)
+    weekAgo.setHours(0, 0, 0, 0)
+    query = query.gte('created_at', weekAgo.toISOString())
+  } else if (dateRange === 'month') {
+    const monthAgo = new Date()
+    monthAgo.setDate(monthAgo.getDate() - 30)
+    monthAgo.setHours(0, 0, 0, 0)
+    query = query.gte('created_at', monthAgo.toISOString())
+  } else if (dateRange === 'custom' && customStartDate && customEndDate) {
+    const startDate = new Date(customStartDate)
+    startDate.setHours(0, 0, 0, 0)
+    const endDate = new Date(customEndDate)
+    endDate.setHours(23, 59, 59, 999)
+    query = query.gte('created_at', startDate.toISOString())
+      .lte('created_at', endDate.toISOString())
+  }
+
+  // Apply item_name ILIKE search (case-insensitive)
+  if (itemName && itemName.trim()) {
+    query = query.ilike('inventory_items.name', `%${itemName.trim()}%`)
+  }
+
+  // Apply sorting
+  if (sortBy === 'newest') {
+    query = query.order('created_at', { ascending: false })
+  } else if (sortBy === 'oldest') {
+    query = query.order('created_at', { ascending: true })
+  }
+
+  // Apply pagination with range
+  query = query.range(offset, offset + limit - 1)
+
+  // Execute query
+  const { data: logs, error, count } = await query
+
+  if (error) {
+    console.error('Error fetching paginated inventory logs:', error)
+    return {
+      logs: [],
+      totalCount: 0,
+      totalPages: 0,
+      currentPage: page
+    }
+  }
+
+  // Transform data to match InventoryLog type
+  const transformedLogs: InventoryLog[] = (logs || []).map((log: any) => ({
+    id: log.id,
+    inventory_item_id: log.inventory_item_id,
+    business_id: log.business_id,
+    item_name: log.inventory_items?.name || 'Unknown Item',
+    change_type: log.change_type,
+    quantity_change: log.quantity_change,
+    notes: log.notes,
+    created_at: log.created_at,
+  }))
+
+  // Calculate total pages
+  const totalCount = count || 0
+  const totalPages = Math.ceil(totalCount / limit)
+
+  return {
+    logs: transformedLogs,
+    totalCount,
+    totalPages,
+    currentPage: page
+  }
+}

@@ -5,6 +5,8 @@ import { getBusinessRules } from '@/lib/data/rules'
 import { ANOMALY_THRESHOLD_PCT } from '@/lib/constants'
 import type { FinanceAnomaly } from '@/types'
 
+export const maxDuration = 60
+
 interface DetectedAnomaly {
   type: string
   category: string | null

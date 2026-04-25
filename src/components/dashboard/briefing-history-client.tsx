@@ -12,6 +12,7 @@ import {
   FileText,
 } from 'lucide-react'
 import type { AiBriefing, BriefingContent } from '@/types'
+import { EmptyState } from '@/components/shared/empty-state'
 
 interface BriefingHistoryClientProps {
   briefings: AiBriefing[]
@@ -56,17 +57,12 @@ export function BriefingHistoryClient({ briefings, businessName }: BriefingHisto
         </div>
 
         {briefings.length === 0 ? (
-          <Card className="shadow-sm">
-            <CardContent className="flex flex-col items-center justify-center py-16 text-center">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-muted mb-4">
-                <FileText className="w-6 h-6 text-muted-foreground" />
-              </div>
-              <h3 className="font-semibold text-lg mb-1">No briefings yet</h3>
-              <p className="text-muted-foreground text-sm max-w-xs">
-                Your daily AI briefings will appear here once generated. Visit your dashboard to trigger the first one.
-              </p>
-            </CardContent>
-          </Card>
+          <EmptyState
+            icon={<FileText className="w-12 h-12" />}
+            title="No briefings yet"
+            description="Your daily briefings will appear here after your first login."
+            className="border rounded-xl bg-card py-20"
+          />
         ) : (
           <div className="space-y-3">
             {briefings.map((briefing) => {

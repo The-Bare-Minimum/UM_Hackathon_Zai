@@ -4,6 +4,8 @@ import { callGemini } from '@/lib/gemini/client'
 import { getBusinessContext } from '@/lib/data/dashboard'
 import { getBusinessRules, buildRulesContext } from '@/lib/data/rules'
 
+export const maxDuration = 60
+
 // Simple in-memory cache (1 hour TTL)
 const insightCache = new Map<string, { insight: string; timestamp: number }>()
 const CACHE_TTL = 60 * 60 * 1000 // 1 hour

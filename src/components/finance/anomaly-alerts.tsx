@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { AlertTriangle, Info, RefreshCw, CheckCircle2, Loader2, X } from 'lucide-react'
 import type { FinanceAnomaly } from '@/types'
+import { EmptyState } from '@/components/shared/empty-state'
 
 interface Props {
   anomalies: FinanceAnomaly[]
@@ -65,21 +66,12 @@ export function AnomalyAlerts({ anomalies, isDetecting, onDismiss, onRescan }: P
 
       {/* Empty state */}
       {!isDetecting && anomalies.length === 0 && (
-        <Card className="shadow-sm">
-          <CardContent className="py-10">
-            <div className="flex flex-col items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center">
-                <CheckCircle2 className="w-6 h-6 text-emerald-600" />
-              </div>
-              <div className="text-center">
-                <p className="font-medium text-emerald-700">No anomalies detected</p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Your finances look consistent with recent patterns.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={<CheckCircle2 className="w-12 h-12 text-emerald-500" />}
+          title="No anomalies detected"
+          description="Your finances look consistent with recent patterns."
+          className="border rounded-xl bg-card py-20"
+        />
       )}
 
       {/* Anomaly cards */}

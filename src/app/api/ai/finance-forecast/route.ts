@@ -5,6 +5,8 @@ import { buildFinanceContext } from '@/lib/data/finance'
 import { getBusinessRules, buildRulesContext } from '@/lib/data/rules'
 import type { ProfitForecast } from '@/types'
 
+export const maxDuration = 60
+
 // Simple in-memory cache
 const forecastCache = new Map<string, { data: ProfitForecast; timestamp: number }>()
 const CACHE_HOURS = 6

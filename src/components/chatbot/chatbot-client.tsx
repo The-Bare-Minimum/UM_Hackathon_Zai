@@ -6,6 +6,7 @@ import { ChatHeader } from './chat-header'
 import { ChatMessageList } from './chat-message-list'
 import { ChatInput } from './chat-input'
 import { SuggestionChips } from './suggestion-chips'
+import { toast } from 'sonner'
 
 interface ChatbotClientProps {
   businessId: string
@@ -162,6 +163,7 @@ export function ChatbotClient({
       setShowSuggestions(true)
       setError(null)
       setStreamingContent('')
+      toast.success('Chat cleared')
     } catch {
       setError('Failed to clear conversation.')
     }

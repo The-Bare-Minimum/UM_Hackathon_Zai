@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { RefreshCw } from 'lucide-react'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 import type { ProfitLossSummary, RecurringExpenses } from '@/types'
+import React from 'react'
 
 interface Props {
   pnl: ProfitLossSummary
@@ -14,7 +15,7 @@ interface Props {
 
 const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316', '#6366f1', '#84cc16', '#06b6d4', '#d946ef', '#78716c']
 
-export function ExpenseBreakdown({ pnl, recurring, currency }: Props) {
+export const ExpenseBreakdown = React.memo(function ExpenseBreakdown({ pnl, recurring, currency }: Props) {
   return (
     <div className="space-y-4">
       <div className="grid gap-4 lg:grid-cols-2">
@@ -145,4 +146,4 @@ export function ExpenseBreakdown({ pnl, recurring, currency }: Props) {
       </Card>
     </div>
   )
-}
+})

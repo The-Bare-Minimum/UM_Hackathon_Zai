@@ -5,6 +5,8 @@ import { buildChatContext } from '@/lib/data/chat-context'
 import { getBusinessRules, buildRulesContext } from '@/lib/data/rules'
 import { getMalaysiaDateString, getTimeGreeting } from '@/lib/utils'
 
+export const maxDuration = 60
+
 // ─── System Prompt Builder ───────────────────────────────
 function buildSystemPrompt(businessContext: string): string {
   const today = getMalaysiaDateString()

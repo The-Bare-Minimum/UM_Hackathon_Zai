@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { TrendingUp, TrendingDown, DollarSign, Package, Users, Activity, Loader2, AlertTriangle } from 'lucide-react'
+import { TrendingUp, TrendingDown, DollarSign, Package, Users, Activity, Loader2, AlertTriangle, BarChart2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
+import { EmptyState } from '@/components/shared/empty-state'
 import {
   BarChart,
   Bar,
@@ -160,23 +161,25 @@ export function DashboardClient({
           </div>
         </div>
 
-        {showDemoBanner && (
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <Activity className="w-5 h-5 text-amber-600" />
-              <div>
-                <h3 className="font-semibold text-amber-800">No sales data yet</h3>
-                <p className="text-amber-700 text-sm">Load our demo dataset to see the dashboard in action, or import your own CSV data.</p>
+        {!hasData ? (
+          <EmptyState
+            icon={<BarChart2 className="w-12 h-12" />}
+            title="No sales data yet"
+            description="Import your POS CSV or load demo data to see your dashboard"
+            action={
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => setIsCsvModalOpen(true)}>Import CSV</Button>
+                <Button onClick={handleLoadDemoData} disabled={isSeeding}>
+                  {isSeeding ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                  Load Demo Data
+                </Button>
               </div>
-            </div>
-            <Button onClick={handleLoadDemoData} disabled={isSeeding} className="shrink-0">
-              {isSeeding ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-              Load Demo Data
-            </Button>
-          </div>
-        )}
-
-        {/* Metric Cards */}
+            }
+            className="border rounded-xl bg-card py-20 mt-8"
+          />
+        ) : (
+          <>
+            {/* Metric Cards */}
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           <Card className="shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
@@ -521,6 +524,8 @@ export function DashboardClient({
           <div className="mt-8">
             <AiInsightCard section="overview" businessId={business.id} title="Overall Business Health" />
           </div>
+        )}
+          </>
         )}
       </div>
     </div>

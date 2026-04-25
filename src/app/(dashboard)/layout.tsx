@@ -6,6 +6,7 @@ import { CsvImportModal } from '@/components/dashboard/csv-import-modal'
 import type { Business } from '@/types'
 import { getCriticalItemCount } from '@/lib/data/inventory'
 import { getBusinessRules } from '@/lib/data/rules'
+import { ErrorBoundary } from '@/components/shared/error-boundary'
 
 export default async function DashboardLayout({
   children,
@@ -43,7 +44,9 @@ export default async function DashboardLayout({
         criticalItemsCount={criticalItemsCount}
         rulesConfigured={rulesConfigured}
       >
-        {children}
+        <ErrorBoundary>
+          {children}
+        </ErrorBoundary>
         <CsvImportModal businessId={business.id} />
       </DashboardLayoutClient>
     </DashboardProvider>

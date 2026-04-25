@@ -18,6 +18,7 @@ import {
 import { useDailyBriefing } from '@/hooks/use-daily-briefing'
 import { useDashboardContext } from '@/context/dashboard-context'
 import { formatBriefingDate } from '@/lib/utils'
+import { toast } from 'sonner'
 
 interface DailyBriefingModalProps {
   businessId: string
@@ -64,6 +65,7 @@ export function DailyBriefingModal({ businessId, businessName }: DailyBriefingMo
     setIsRegenerating(true)
     await regenerate()
     setIsRegenerating(false)
+    toast.success('Briefing regenerated')
   }
 
   const isLoadingState = isLoading || isGenerating || isRegenerating

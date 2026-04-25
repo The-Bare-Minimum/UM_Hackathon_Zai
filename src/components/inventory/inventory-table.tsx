@@ -131,8 +131,8 @@ export function InventoryTable({
     <div className="space-y-4">
       <div className="border rounded-xl bg-card overflow-hidden">
         {/* Desktop Table */}
-        <div className="hidden md:block overflow-x-auto">
-          <table className="w-full">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[800px]">
             <thead>
               <tr className="border-b bg-muted/40">
                 {columns.map((col) => (

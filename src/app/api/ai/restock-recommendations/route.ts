@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server'
 import { callGemini } from '@/lib/gemini/client'
 import { getBusinessRules, buildRulesContext } from '@/lib/data/rules'
 
+export const maxDuration = 60
+
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient()

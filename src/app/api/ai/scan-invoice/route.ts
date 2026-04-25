@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { callGeminiWithImage } from '@/lib/gemini/client'
 import { getBusinessRules } from '@/lib/data/rules'
+import sharp from 'sharp'
+
+export const maxDuration = 60
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic']
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
@@ -56,9 +59,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Business not found' }, { status: 404 })
     }
 
-    // ── Step 2: Convert to buffer ──
+    // ── Step 2: Convert to buffer and compress ──
     const arrayBuffer = await imageFile.arrayBuffer()
-    const buffer = Buffer.from(arrayBuffer)
+    const originalBuffer = Buffer.from(arrayBuffer)
+    const buffer = await sharp(originalBuffer)
+      .resize(1024, 1024, { fit: 'inside' })
+      .jpeg({ quality: 80 })
+      .toBuffer()
 
     // ── Step 3: Upload to Supabase Storage ──
     const timestamp = Date.now()

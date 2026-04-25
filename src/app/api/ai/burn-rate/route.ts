@@ -4,6 +4,8 @@ import { callGemini } from '@/lib/gemini/client'
 import { getBurnRate } from '@/lib/data/finance'
 import { getBusinessRules, buildRulesContext } from '@/lib/data/rules'
 
+export const maxDuration = 60
+
 const burnRateCache = new Map<string, { narrative: string; timestamp: number }>()
 const CACHE_HOURS = 2
 

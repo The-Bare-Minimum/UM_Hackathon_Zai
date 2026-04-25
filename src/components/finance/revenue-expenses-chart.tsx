@@ -7,6 +7,7 @@ import {
   Tooltip, ResponsiveContainer, Legend,
 } from 'recharts'
 import type { ProfitLossSummary, BurnRateData } from '@/types'
+import React from 'react'
 
 interface Props {
   pnl: ProfitLossSummary
@@ -15,7 +16,7 @@ interface Props {
   currency: string
 }
 
-export function RevenueExpensesChart({ pnl, burnRate, burnNarrative, currency }: Props) {
+export const RevenueExpensesChart = React.memo(function RevenueExpensesChart({ pnl, burnRate, burnNarrative, currency }: Props) {
   return (
     <div className="space-y-4">
       <div className="grid gap-4 lg:grid-cols-3">
@@ -136,4 +137,4 @@ export function RevenueExpensesChart({ pnl, burnRate, burnNarrative, currency }:
       </Card>
     </div>
   )
-}
+})

@@ -91,15 +91,16 @@ export function ActivityLogList({ logs, isLoading }: ActivityLogListProps) {
     <>
       {/* Desktop Table Layout (hidden on mobile) */}
       <div className="hidden md:block border rounded-lg overflow-hidden bg-card">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b bg-muted/50">
-              <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">
-                Item Name
-              </th>
-              <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">
-                Change Type
-              </th>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[800px]">
+            <thead>
+              <tr className="border-b bg-muted/50">
+                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">
+                  Item Name
+                </th>
+                <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">
+                  Change Type
+                </th>
               <th className="text-left py-3 px-4 text-sm font-semibold text-foreground">
                 Quantity Change
               </th>

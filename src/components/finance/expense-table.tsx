@@ -10,6 +10,8 @@ import { PlusCircle, Search, Pencil, Trash2, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
 import { EXPENSE_CATEGORIES } from '@/lib/constants'
 import type { Expense } from '@/types'
+import { EmptyState } from '@/components/shared/empty-state'
+import { Receipt } from 'lucide-react'
 
 interface Props {
   businessId: string
@@ -144,17 +146,23 @@ export function ExpenseTable({ businessId, currency, onAddExpense }: Props) {
             ))}
           </div>
         ) : paged.length === 0 ? (
-          <div className="text-center py-10">
-            <p className="text-muted-foreground text-sm">No expenses recorded yet</p>
-            <Button variant="outline" size="sm" className="mt-3" onClick={onAddExpense}>
-              Add your first expense
-            </Button>
-          </div>
+          <EmptyState
+            icon={<Receipt className="w-12 h-12" />}
+            title="No expenses recorded"
+            description="Start logging your expenses to track your financial health."
+            action={
+              <div className="flex justify-center gap-2">
+                <Button variant="outline" onClick={onAddExpense}>Add Expense</Button>
+                <Button onClick={() => window.location.href='/dashboard'}>Import CSV</Button>
+              </div>
+            }
+            className="border rounded-xl bg-card py-20 mt-4"
+          />
         ) : (
           <>
             {/* Table */}
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-sm min-w-[800px]">
                 <thead>
                   <tr className="border-b text-muted-foreground">
                     <th className="text-left py-2 font-medium">Date</th>

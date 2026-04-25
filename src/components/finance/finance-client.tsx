@@ -11,6 +11,7 @@ import { ProfitForecastSection } from './profit-forecast'
 import { AnomalyAlerts } from './anomaly-alerts'
 import { ExpenseTable } from './expense-table'
 import { AddExpenseModal } from './add-expense-modal'
+import { toast } from 'sonner'
 import type {
   ProfitLossSummary,
   BurnRateData,
@@ -119,6 +120,7 @@ export function FinanceClient({
     try {
       await fetch(`/api/anomalies/${id}/dismiss`, { method: 'POST' })
       setAnomalies(prev => prev.filter(a => a.id !== id))
+      toast.success('Anomaly dismissed')
     } catch {}
   }
 

@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Upload, FileText, CheckCircle, AlertCircle, X } from 'lucide-react'
 import { Progress } from '@/components/ui/progress'
 import { useDashboardContext } from '@/context/dashboard-context'
+import { toast } from 'sonner'
 
 interface CsvImportModalProps {
   businessId: string
@@ -100,7 +101,7 @@ export function CsvImportModal({ businessId }: CsvImportModalProps) {
       setStep('mapping')
     } catch (err) {
       console.error(err)
-      // Need proper error toast here in a real app
+      toast.error('Failed to parse file. Please try again.')
     } finally {
       setIsUploading(false)
     }
@@ -153,6 +154,7 @@ export function CsvImportModal({ businessId }: CsvImportModalProps) {
       setStep('success')
     } catch (err) {
       console.error(err)
+      toast.error(err instanceof Error ? err.message : 'Import failed')
     } finally {
       setIsUploading(false)
     }
@@ -287,7 +289,7 @@ export function CsvImportModal({ businessId }: CsvImportModalProps) {
                 Data Preview (First 5 rows)
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left">
+                <table className="w-full text-sm text-left min-w-[600px]">
                   <thead className="bg-secondary/50 text-xs text-muted-foreground uppercase">
                     <tr>
                       <th className="px-4 py-2">Date</th>

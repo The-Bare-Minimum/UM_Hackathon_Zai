@@ -59,7 +59,6 @@ export function ItemFormModal({
 
   useEffect(() => {
     if (isOpen && mode === 'edit' && item) {
-      console.log('Setting edit values:', { category: item.category, unit: item.unit })
       setShowDeleteConfirm(false)
       setName(item.name)
       setCategory(item.category)
@@ -78,7 +77,6 @@ export function ItemFormModal({
       setSupplier(item.supplier || '')
       setExpiryDate(item.expiry_date ? item.expiry_date.split('T')[0] : '')
       
-      console.log('State after setting:', { category: item.category, unit: item.unit })
     } else if (isOpen && mode === 'add') {
       // Reset form for 'add'
       setShowDeleteConfirm(false)
@@ -204,7 +202,6 @@ export function ItemFormModal({
                 key={`category-${item?.id || 'new'}-${category}`}
                 value={category} 
                 onValueChange={(val) => {
-                  console.log('Category changed to:', val)
                   setCategory(val)
                 }}
               >
@@ -226,7 +223,6 @@ export function ItemFormModal({
                 key={`unit-${item?.id || 'new'}-${unit}`}
                 value={unit} 
                 onValueChange={(val) => {
-                  console.log('Unit changed to:', val)
                   setUnit(val)
                 }}
               >

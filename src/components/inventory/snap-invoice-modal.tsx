@@ -231,6 +231,7 @@ export function SnapInvoiceModal({
       setUpdateStats({ updated: data.updated, created: data.created })
       onSuccess(data.items)
       setStep(4)
+      toast.success('Invoice scanned and inventory updated')
     } catch (error: any) {
       toast.error(error.message)
     } finally {
@@ -372,7 +373,7 @@ export function SnapInvoiceModal({
             </div>
 
             <div className="border rounded-xl overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full text-sm min-w-[800px]">
                 <thead className="bg-muted/50 border-b">
                   <tr>
                     <th className="p-3 text-left w-10">

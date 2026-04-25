@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { callGemini } from '@/lib/gemini/client'
 import { getBusinessContext } from '@/lib/data/dashboard'
+import { getBusinessRules, buildRulesContext } from '@/lib/data/rules'
 import { getMalaysiaDateString, getTimeGreeting, getMalaysiaDayName, formatBriefingDate } from '@/lib/utils'
 import type { BriefingContent } from '@/types'
 
@@ -279,6 +280,9 @@ export async function POST(request: NextRequest) {
     const weekExpenseTotal = (weekExpenses || []).reduce((sum, e) => sum + Number(e.amount), 0)
 
     // ── STEP 3: Generate briefing with AI ──
+    const rules = await getBusinessRules(business_id)
+    const rulesContext = buildRulesContext(rules)
+
     const userPrompt = buildUserPrompt(
       businessContext,
       yesterdayRevenue,
@@ -291,10 +295,14 @@ export async function POST(request: NextRequest) {
     let rawResponse: string
     let retried = false
 
+    const systemWithRules = rulesContext
+      ? SYSTEM_PROMPT + '\n\n' + rulesContext + '\nPay special attention to any rule violations in the urgent section.'
+      : SYSTEM_PROMPT
+
     try {
       rawResponse = await callGemini(
         [
-          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'system', content: systemWithRules },
           { role: 'user', content: userPrompt },
         ],
         { temperature: 0.7, max_tokens: 400 }

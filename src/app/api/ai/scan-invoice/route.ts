@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { callGeminiWithImage } from '@/lib/gemini/client'
+import { getBusinessRules } from '@/lib/data/rules'
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic']
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
@@ -205,12 +206,23 @@ Extract every line item you can see.`
       0
     )
 
+    // Check against weekly ingredient budget
+    const rules = await getBusinessRules(businessId)
+    let budgetWarning: { message: string; overBy: number } | null = null
+    if (rules?.weekly_ingredient_budget && totalValue > rules.weekly_ingredient_budget) {
+      budgetWarning = {
+        message: `This invoice (RM${totalValue.toFixed(2)}) exceeds your weekly ingredient budget (RM${rules.weekly_ingredient_budget})`,
+        overBy: Math.round((totalValue - rules.weekly_ingredient_budget) * 100) / 100,
+      }
+    }
+
     return NextResponse.json({
       items: matchedItems,
       totalItems: matchedItems.length,
       totalValue,
       storagePath: uploadedPath,
       invoiceDate: new Date().toISOString().split('T')[0],
+      budgetWarning,
     })
   } catch (err) {
     console.error('POST /api/ai/scan-invoice error:', err)

@@ -13,6 +13,7 @@ import {
   UtensilsCrossed,
   History,
   ArrowRight,
+  Settings2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -26,6 +27,7 @@ interface DashboardLayoutProps {
   children: React.ReactNode
   business: Business
   criticalItemsCount?: number
+  rulesConfigured?: boolean
 }
 
 const NAV_ITEMS = [
@@ -33,9 +35,10 @@ const NAV_ITEMS = [
   { href: '/inventory', label: 'Inventory', icon: Package },
   { href: '/briefings', label: 'Briefings', icon: History },
   { href: '/chatbot', label: 'AI Assistant', icon: MessageSquare, subtitle: 'Ask Zara' },
+  { href: '/customization', label: 'Customization', icon: Settings2, subtitle: 'Rules & preferences' },
 ]
 
-export function DashboardLayoutClient({ children, business, criticalItemsCount = 0 }: DashboardLayoutProps) {
+export function DashboardLayoutClient({ children, business, criticalItemsCount = 0, rulesConfigured = true }: DashboardLayoutProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -114,6 +117,9 @@ export function DashboardLayoutClient({ children, business, criticalItemsCount =
                     {unreadChatCount}
                   </span>
                 )}
+                {item.href === '/customization' && !rulesConfigured && (
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" title="Configure your business rules" />
+                )}
               </Link>
             )
           })}
@@ -141,9 +147,9 @@ export function DashboardLayoutClient({ children, business, criticalItemsCount =
 
         {/* Bottom: business info + logout */}
         <div className="p-4 border-t space-y-3">
-          <div>
+          <div className="flex items-center gap-2">
             <p className="text-sm font-medium truncate">{business.name}</p>
-            <Badge variant="secondary" className="mt-1 text-xs">
+            <Badge variant="secondary" className="text-xs shrink-0">
               {businessTypeLabel}
             </Badge>
           </div>
@@ -246,15 +252,18 @@ export function DashboardLayoutClient({ children, business, criticalItemsCount =
                         {unreadChatCount}
                       </span>
                     )}
+                    {item.href === '/customization' && !rulesConfigured && (
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" title="Configure your business rules" />
+                    )}
                   </Link>
                 )
               })}
             </nav>
 
             <div className="p-4 border-t space-y-3">
-              <div>
+              <div className="flex items-center gap-2">
                 <p className="text-sm font-medium truncate">{business.name}</p>
-                <Badge variant="secondary" className="mt-1 text-xs">
+                <Badge variant="secondary" className="text-xs shrink-0">
                   {businessTypeLabel}
                 </Badge>
               </div>

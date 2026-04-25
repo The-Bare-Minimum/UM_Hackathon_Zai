@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { callGemini } from '@/lib/gemini/client'
 import { getBusinessContext } from '@/lib/data/dashboard'
+import { getBusinessRules, buildRulesContext } from '@/lib/data/rules'
 
 // Simple in-memory cache (1 hour TTL)
 const alertCache = new Map<string, { alerts: CostAlert[]; timestamp: number }>()
@@ -54,9 +55,16 @@ export async function POST(request: NextRequest) {
 
     const context = await getBusinessContext(business_id)
 
+    // Get business rules for custom thresholds
+    const rules = await getBusinessRules(business_id)
+    const rulesContext = buildRulesContext(rules)
+    const systemWithRules = rulesContext
+      ? SYSTEM_PROMPT + '\nUse the owner\'s custom targets (not industry defaults) to determine what counts as a warning vs danger alert.\n' + rulesContext
+      : SYSTEM_PROMPT
+
     const response = await callGemini(
       [
-        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'system', content: systemWithRules },
         {
           role: 'user',
           content: `Analyse this business data and generate cost/waste alerts:\n\n${context}`,

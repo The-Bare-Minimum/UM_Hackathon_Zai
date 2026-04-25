@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { callGemini } from '@/lib/gemini/client'
 import { buildChatContext } from '@/lib/data/chat-context'
+import { getBusinessRules, buildRulesContext } from '@/lib/data/rules'
 import { getMalaysiaDateString, getTimeGreeting } from '@/lib/utils'
 
 // ─── System Prompt Builder ───────────────────────────────
@@ -110,12 +111,17 @@ export async function POST(request: NextRequest) {
 
     // Build context
     const businessContext = await buildChatContext(business_id)
+    const rules = await getBusinessRules(business_id)
+    const rulesContext = buildRulesContext(rules)
     const systemPrompt = buildSystemPrompt(businessContext)
+    const fullSystemPrompt = rulesContext
+      ? systemPrompt + '\n\n' + rulesContext + '\nAlways check recommendations against these rules before responding. If the user asks for something that conflicts with a rule, flag the conflict and suggest alternatives.'
+      : systemPrompt
 
     // Build messages array — take last 8 from history
     const recentHistory = (conversation_history || []).slice(-8)
     const messagesForAI = [
-      { role: 'system' as const, content: systemPrompt },
+      { role: 'system' as const, content: fullSystemPrompt },
       ...recentHistory.map((m) => ({
         role: m.role as 'system' | 'user' | 'assistant',
         content: m.content,

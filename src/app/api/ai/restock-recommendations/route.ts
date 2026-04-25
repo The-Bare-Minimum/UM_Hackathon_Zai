@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { callGemini } from '@/lib/gemini/client'
+import { getBusinessRules, buildRulesContext } from '@/lib/data/rules'
 
 export async function POST(request: NextRequest) {
   try {
@@ -68,6 +69,13 @@ export async function POST(request: NextRequest) {
       )
       .join('\n')
 
+    // Get business rules
+    const rules = await getBusinessRules(business_id)
+    const rulesContext = buildRulesContext(rules)
+    const budgetInstruction = rules?.weekly_ingredient_budget
+      ? `\nIMPORTANT: Only recommend items that fit within the weekly ingredient budget of RM${rules.weekly_ingredient_budget}. Split large orders across weeks if needed. Schedule restocking around the preferred restock day.`
+      : ''
+
     const prompt = `You are a procurement advisor for a Malaysian F&B restaurant called "${business.name}".
 Return ONLY a valid JSON array. No explanation. No markdown. Raw JSON only.
 
@@ -82,6 +90,7 @@ Each recommendation object:
   "urgency": "immediate" | "this_week" | "next_week",
   "supplier_tip": string (optional, max 10 words)
 }
+${rulesContext ? '\n' + rulesContext : ''}${budgetInstruction}
 
 Current inventory:
 ${inventoryList}

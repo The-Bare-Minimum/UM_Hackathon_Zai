@@ -5,6 +5,7 @@ import { DashboardProvider } from '@/context/dashboard-context'
 import { CsvImportModal } from '@/components/dashboard/csv-import-modal'
 import type { Business } from '@/types'
 import { getCriticalItemCount } from '@/lib/data/inventory'
+import { getBusinessRules } from '@/lib/data/rules'
 
 export default async function DashboardLayout({
   children,
@@ -32,12 +33,15 @@ export default async function DashboardLayout({
   }
 
   const criticalItemsCount = await getCriticalItemCount(business.id)
+  const rules = await getBusinessRules(business.id)
+  const rulesConfigured = rules?.is_configured ?? false
 
   return (
     <DashboardProvider>
       <DashboardLayoutClient 
         business={business as Business}
         criticalItemsCount={criticalItemsCount}
+        rulesConfigured={rulesConfigured}
       >
         {children}
         <CsvImportModal businessId={business.id} />

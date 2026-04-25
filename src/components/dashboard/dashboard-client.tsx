@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { TrendingUp, TrendingDown, DollarSign, Package, Users, Activity, Loader2 } from 'lucide-react'
+import { TrendingUp, TrendingDown, DollarSign, Package, Users, Activity, Loader2, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import {
@@ -20,10 +20,11 @@ import {
 } from 'recharts'
 import { CostAlertPanel } from './cost-alert-panel'
 import { AiInsightCard } from './ai-insight-card'
-import { Topbar } from '@/components/layout/topbar'
 import { useDashboardContext } from '@/context/dashboard-context'
+import { Upload, BellRing, FileText } from 'lucide-react'
 import type { SalesSummary, InventorySummaryData, ExpenseSummaryData } from '@/lib/data/dashboard'
 import { useRouter } from 'next/navigation'
+import type { RuleViolation } from '@/types'
 
 interface DashboardClientProps {
   business: { id: string; name: string }
@@ -41,9 +42,29 @@ export function DashboardClient({
   expenseSummary,
 }: DashboardClientProps) {
   const router = useRouter()
-  const { refreshKey } = useDashboardContext()
+  const { 
+    refreshKey,
+    setIsCsvModalOpen,
+    setIsBriefingOpen,
+    hasSeenBriefingToday,
+  } = useDashboardContext()
   const [isSeeding, setIsSeeding] = useState(false)
   const [showDemoBanner, setShowDemoBanner] = useState(!hasData)
+  const [violations, setViolations] = useState<RuleViolation[]>([])
+
+  // Fetch rule violations
+  useEffect(() => {
+    async function fetchViolations() {
+      try {
+        const res = await fetch(`/api/rules/violations?business_id=${business.id}`)
+        if (res.ok) {
+          const data = await res.json()
+          setViolations(data.violations || [])
+        }
+      } catch {}
+    }
+    if (hasData) fetchViolations()
+  }, [business.id, hasData])
 
   const handleLoadDemoData = async () => {
     try {
@@ -91,15 +112,50 @@ export function DashboardClient({
 
   return (
     <div className="flex flex-col min-h-screen pb-10" key={refreshKey}>
-      <Topbar title="Dashboard Overview" hasAlerts={inventorySummary.criticalItems.length > 0} />
-      
       <div className="flex-1 space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h2 className="text-2xl font-bold tracking-tight">
               {greeting()}, {business.name}
             </h2>
             <p className="text-muted-foreground mt-1 text-sm">{currentDate}</p>
+          </div>
+          
+          {/* Action buttons moved from Topbar */}
+          <div className="flex items-center gap-3">
+            {/* Today's Briefing button */}
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 gap-1.5 relative"
+              onClick={() => setIsBriefingOpen(true)}
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Today&apos;s Briefing</span>
+              {!hasSeenBriefingToday && (
+                <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-gradient-to-br from-amber-400 to-orange-500" />
+                </span>
+              )}
+            </Button>
+
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-8 gap-1.5"
+              onClick={() => setIsCsvModalOpen(true)}
+            >
+              <Upload className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Import CSV</span>
+            </Button>
+            
+            <Button variant="ghost" size="icon" className="h-8 w-8 relative">
+              <BellRing className="w-4 h-4 text-muted-foreground" />
+              {inventorySummary.criticalItems.length > 0 && (
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-destructive" />
+              )}
+            </Button>
           </div>
         </div>
 
@@ -213,6 +269,36 @@ export function DashboardClient({
             </CardContent>
           </Card>
         </div>
+
+        {/* Rule Violations Banner */}
+        {violations.length > 0 && (
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h3 className="font-semibold text-amber-800 text-sm">
+                  {violations.length} business rule violation{violations.length > 1 ? 's' : ''} detected
+                </h3>
+                <ul className="mt-1.5 space-y-1">
+                  {violations.map((v, i) => (
+                    <li key={i} className="text-xs text-amber-700">
+                      <span className={`inline-block w-1.5 h-1.5 rounded-full mr-1.5 ${v.severity === 'danger' ? 'bg-red-500' : 'bg-amber-500'}`} />
+                      <span className="font-medium">{v.rule}:</span> {v.current} (limit: {v.limit})
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="h-auto p-0 text-amber-700 hover:text-amber-900 mt-1.5 text-xs"
+                  onClick={() => router.push('/customization')}
+                >
+                  View Customization →
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Charts Section */}
         <div className="grid gap-6 lg:grid-cols-3">

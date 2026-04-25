@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Topbar } from '@/components/layout/topbar'
 import {
   Sparkles,
   AlertTriangle,
@@ -48,8 +47,6 @@ export function BriefingHistoryClient({ briefings, businessName }: BriefingHisto
 
   return (
     <div className="flex flex-col min-h-screen pb-10">
-      <Topbar title="Briefing History" />
-
       <div className="flex-1 space-y-6">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Past Briefings</h2>

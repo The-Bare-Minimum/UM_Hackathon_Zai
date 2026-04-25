@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { callGemini } from '@/lib/gemini/client'
 import { getBusinessContext } from '@/lib/data/dashboard'
+import { getBusinessRules, buildRulesContext } from '@/lib/data/rules'
 
 // Simple in-memory cache (1 hour TTL)
 const insightCache = new Map<string, { insight: string; timestamp: number }>()
@@ -72,10 +73,22 @@ export async function POST(request: NextRequest) {
     // Get business context
     const context = await getBusinessContext(business_id)
 
+    // Get business rules
+    const { data: biz } = await supabase
+      .from('businesses')
+      .select('id')
+      .eq('id', business_id)
+      .single()
+    const rules = biz ? await getBusinessRules(biz.id) : null
+    const rulesContext = buildRulesContext(rules)
+    const systemWithRules = rulesContext
+      ? SYSTEM_PROMPT + '\nWhen calculating thresholds for what counts as a problem, use the owner\'s targets, not generic industry averages.\n' + rulesContext
+      : SYSTEM_PROMPT
+
     // Call Gemini
     const insight = await callGemini(
       [
-        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'system', content: systemWithRules },
         { role: 'user', content: SECTION_PROMPTS[section](context) },
       ],
       { temperature: 0.7, max_tokens: 300 }
